@@ -1,0 +1,59 @@
+[build-system]
+requires = [ "poetry-core",]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "eyay-yetkilendirme-servisi"
+version = "0.1.0"
+description = "EyAy.OS Yetkilendirme Mikroservisi"
+authors = [ "Barut Şeref <barutseref@barutben.com>",]
+[[tool.poetry.packages]]
+include = "app"
+from = "src"
+
+[tool.black]
+line-length = 88
+target-version = [ "py311",]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+select = [ "E", "F", "I", "N", "W", "UP",]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+fastapi = "^0.104.0"
+sqlalchemy = "^2.0.0"
+alembic = "^1.12.0"
+psycopg2-binary = "^2.9.0"
+python-multipart = "^0.0.6"
+pydantic-settings = "^2.0.0"
+redis = "^5.0.0"
+
+[tool.poetry.dependencies.uvicorn]
+extras = [ "standard",]
+version = "^0.24.0"
+
+[tool.poetry.dependencies.python-jose]
+extras = [ "cryptography",]
+version = "^3.3.0"
+
+[tool.poetry.dependencies.passlib]
+extras = [ "bcrypt",]
+version = "^1.7.0"
+
+[tool.poetry.dependencies.pydantic]
+extras = [ "email",]
+version = "^2.4.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-asyncio = "^0.21.0"
+httpx = "^0.25.0"
+black = "^23.7.0"
+ruff = "^0.0.287"
+mypy = "^1.5.0"

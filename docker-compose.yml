@@ -1,0 +1,150 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  # Veritabanları
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: eyay
+      POSTGRES_USER: eyay
+      POSTGRES_PASSWORD: eyay123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - eyay-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - eyay-network
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - eyay-network
+
+  # Mikroservisler
+  yetkilendirme:
+    build: ./servisler/yetkilendirme
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgresql://eyay:eyay123@postgres:5432/eyay
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - eyay-network
+
+  dil-isleme:
+    build: ./servisler/dil
+    ports:
+      - "8002:8002"
+    environment:
+      - REDIS_URL=redis://redis:6379/1
+    depends_on:
+      - redis
+    networks:
+      - eyay-network
+
+  konusma:
+    build: ./servisler/ses
+    ports:
+      - "8003:8003"
+    environment:
+      - REDIS_URL=redis://redis:6379/2
+    depends_on:
+      - redis
+    networks:
+      - eyay-network
+
+  hafiza:
+    build: ./servisler/hafiza
+    ports:
+      - "8004:8004"
+    environment:
+      - DATABASE_URL=postgresql://eyay:eyay123@postgres:5432/eyay
+      - REDIS_URL=redis://redis:6379/3
+      - QDRANT_URL=http://qdrant:6333
+    depends_on:
+      - postgres
+      - redis
+      - qdrant
+    networks:
+      - eyay-network
+
+  sohbet:
+    build: ./servisler/sohbet
+    ports:
+      - "8005:8005"
+    environment:
+      - DATABASE_URL=postgresql://eyay:eyay123@postgres:5432/eyay
+      - REDIS_URL=redis://redis:6379/4
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - eyay-network
+
+  analiz:
+    build: ./servisler/analiz
+    ports:
+      - "8006:8006"
+    environment:
+      - DATABASE_URL=postgresql://eyay:eyay123@postgres:5432/eyay
+      - REDIS_URL=redis://redis:6379/5
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - eyay-network
+
+  # API Gateway
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - yetkilendirme
+      - dil
+      - ses
+      - hafiza
+      - sohbet
+      - analiz
+    networks:
+      - eyay-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  qdrant_data:
+
+networks:
+  eyay-network:
+    driver: bridge
+```
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+volumes:
+  postgres_data:
+  qdrant_data:

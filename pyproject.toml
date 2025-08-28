@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "os2"
+version = "0.1.0"
+description = "yapai"
+authors = ["barutseref <barutbeyseref@gmail.com>"]
+license = "mit"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.2.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "eyay-ses-servisi"
+version = "0.1.0"
+description = "Ses Servisi"
+authors = ["Barut Şeref <barut@example.com>"]
+packages = [
+    { include = "app", from = "src" }
+]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+fastapi = "^0.104.0"
+uvicorn = { extras = ["standard"], version = "^0.24.0" }
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
