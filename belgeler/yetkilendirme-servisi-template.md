@@ -2,7 +2,7 @@
 
 ## 📁 Dizin Yapısı
 # Ana dizine git
-mkdir -p servisler/yetkilendirme_servisi/app/modeller
+mkdir -p servisler/yetkilendirme/app/modeller
 mkdir -p servisler/yetkilendirme/app/schemas
 mkdir -p servisler/yetkilendirme/app/api/v1
 mkdir -p servisler/yetkilendirme/app/core
